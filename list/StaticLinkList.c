@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "..\custom.h"
-#include "..\test.c"
 
 /**
  * 静态链表,使用index的相对位置作为指针,方便在不设指针类型的程序中使用链表结构
@@ -19,7 +17,7 @@ typedef struct SLinkList {
 /**
  * 初始化
  */
-void initSLinkList(SLinkList *L) {
+void initSLinkList(SLinkList* L) {
   // L[0]->data保存未分配数组的长度,不包括第一个和最后一个
   for (int i = 0; i < LISTSIZE - 1; i++) {
     L[i].cur = i + 1;
@@ -29,12 +27,23 @@ void initSLinkList(SLinkList *L) {
   L[LISTSIZE - 1].cur = 0;
   L[LISTSIZE - 1].data = 0;
 }
+void destroyList(SLinkList* L) {
+  free(L);
+}
 
+void play(SLinkList* L) {
+  printf("index : data : cur\n");
+  for (int i = 0; i < LISTSIZE; i++) {
+    printf("%d\t\t%d\t\t%d\n", i, L[i].data, L[i].cur);
+  }
+  printf("\n");
+}
 /**
  * 遍历L
  */
-void traverseSLinkList(SLinkList *L) {
-  if (L[LISTSIZE - 1].data == 0) return;
+void traverseSLinkList(SLinkList* L) {
+  if (L[LISTSIZE - 1].data == 0)
+    return;
   int i = L[LISTSIZE - 1].cur;
   while (i != 0) {
     printf("%d\t", L[i].data);
@@ -46,14 +55,13 @@ void traverseSLinkList(SLinkList *L) {
 /**
  * 在第i个位置插入e
  */
-int listInsert(SLinkList *L, int i, ElemType e) {
-  if (L[0].data == 0) {
-    // L[0].data==0表明未分配的空间已经用完,重新分配一个空间
-    printf("空间不足");
-    return 0;
-  }
+int listInsert(SLinkList* L, int i, ElemType e) {
   if (i > L[LISTSIZE - 1].data + 1) {
     printf("位置i不合法");
+    return 0;
+  }
+  if (L[0].data == 0) {
+    printf("空间不足\n");
     return 0;
   }
   // 在未分配空间的L拿出一个空间来, 就拿第一个
@@ -78,8 +86,9 @@ int listInsert(SLinkList *L, int i, ElemType e) {
 /**
  * 删除一个元素
  */
-int listDelete(SLinkList *L, int i, ElemType *e) {
-  if (L[LISTSIZE - 1].data == 0) return 0;
+int listDelete(SLinkList* L, int i, ElemType* e) {
+  if (L[LISTSIZE - 1].data == 0)
+    return 0;
   // 找到第i个位置
   int k = LISTSIZE - 1;
   for (int j = 0; j < i; j++) {
@@ -104,7 +113,7 @@ int listDelete(SLinkList *L, int i, ElemType *e) {
  * 算法思想:循环每个B,如果A中有的就删除A中的,A中没有就插入
  * 用La指针返回结果
  */
-void A_BVB_A(SLinkList *La, SLinkList *Lb) {
+void A_BVB_A(SLinkList* La, SLinkList* Lb) {
   for (int i = Lb[LISTSIZE - 1].cur; i != 0; i = Lb[i].cur) {
     ElemType key = Lb[i].data;
     int index = La[LISTSIZE - 1].cur;
@@ -129,33 +138,35 @@ void A_BVB_A(SLinkList *La, SLinkList *Lb) {
 /**
  * 测试
  */
-void createList(SLinkList *La, SLinkList *Lb) {
+void createList(SLinkList* La, SLinkList* Lb) {
   initSLinkList(La);
   initSLinkList(Lb);
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 50; i++) {
     listInsert(La, 0, i);
   }
-  for (int i = 4; i < 12; i++) {
-    listInsert(Lb, 0, i);
-  }
+  //   for (int i = 4; i < 12; i++) {
+  //     listInsert(Lb, 0, i);
+  //   }
 }
 int main() {
-  SLinkList *La = (SLinkList *)malloc(sizeof(SLinkList) * LISTSIZE);
-  SLinkList *Lb = (SLinkList *)malloc(sizeof(SLinkList) * LISTSIZE);
+  SLinkList* La = (SLinkList*)malloc(sizeof(SLinkList) * LISTSIZE);
+  SLinkList* Lb = (SLinkList*)malloc(sizeof(SLinkList) * LISTSIZE);
   createList(La, Lb);
-  printf("空间总长度%d\n", LISTSIZE);
-  printf("La已用空间长度%d\n", La[LISTSIZE - 1].data);
-  printf("La未用空间长度%d\n", La[0].data);
-  printf("Lb已用空间长度%d\n", Lb[LISTSIZE - 1].data);
-  printf("Lb未用空间长度%d\n", Lb[0].data);
+  //   printf("空间总长度%d\n", LISTSIZE);
+  //   printf("La已用空间长度%d\n", La[LISTSIZE - 1].data);
+  //   printf("La未用空间长度%d\n", La[0].data);
+  //   printf("Lb已用空间长度%d\n", Lb[LISTSIZE - 1].data);
+  //   printf("Lb未用空间长度%d\n", Lb[0].data);
+  //   traverseSLinkList(La);
+  play(La);
   traverseSLinkList(La);
+  //   traverseSLinkList(Lb);
+  //   A_BVB_A(La, Lb);
 
-  traverseSLinkList(Lb);
-  A_BVB_A(La, Lb);
+  //   traverseSLinkList(La);
 
-  traverseSLinkList(La);
-
-  traverseSLinkList(Lb);
-
+  //   traverseSLinkList(Lb);
+  destroyList(La);
+  destroyList(Lb);
   return 0;
 }

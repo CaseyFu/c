@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "custom.h"
 
-void printChar(char *s) {
+void printChar(char* s) {
   printf("=============================\n");
   printf("output char*:\n");
   printf("%s\n", s);
@@ -48,13 +47,21 @@ void printDouble(double i) {
 //   }
 // }
 
-// int main() {
-//   Node *L = (Node *)malloc(sizeof(Node));
+typedef struct Test {
+  int x;
+  int y;
+} Test;
 
-//   printf("%d\n", L[3]->cur);
-//   printf("%d\n", L[4]->cur);
-//   test2(L);
-//   printf("%d\n", L[3]->cur);
-//   printf("%d\n", L[4]->cur);
-//   return 0;
-// }
+void test(Test* T, Test* B) {
+  B = T;
+  printf("(%d,%d)", B->x, B->y);
+  free(T);
+}
+int main() {
+  Test* T = (Test*)malloc(sizeof(Test));
+  Test B;
+  T->x = 10;
+  T->y = 10;
+  test(T, &B);
+  printf("(%d,%d)", B.x, B.y);
+}

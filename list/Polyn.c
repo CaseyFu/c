@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+/**
+ * 多项式,多项式相加、相减、相乘
+ */
 typedef struct List {
   int length;
   struct Node* head;
