@@ -130,20 +130,27 @@ void createStack(SqStack* stack) {
 /**
  * 数制转换,输入一个十进制数,转换为2、8、16进制
  */
-void conversion(int num) {
+void conversion(long long num) {
   SqStack* stack = (SqStack*)malloc(sizeof(SqStack));
   initStack(stack);
   ElemType e;
   printf("十进制%d===>\n", num);
+  int lt0 = 0;
+  if (num < 0) {
+    num *= -1;
+    lt0 = 1;
+  }
   // 转换为二进制
   int divisor = num;
   while (1) {
     push(stack, divisor % 2);
-    divisor >>= 1;  // 右移1位
+    divisor /= 2;  // 右移1位
     if (divisor == 0)
       break;
   }
   printf("二进制:");
+  if (lt0)
+    printf("-");
   while (!isEmpty(stack)) {
     pop(stack, &e);
     printf("%d", e);
@@ -153,11 +160,13 @@ void conversion(int num) {
   divisor = num;
   while (1) {
     push(stack, divisor % 8);
-    divisor >>= 3;  // 右移3位
+    divisor /= 8;  // 右移3位
     if (divisor == 0)
       break;
   }
   printf("八进制:");
+  if (lt0)
+    printf("-");
   while (!isEmpty(stack)) {
     pop(stack, &e);
     printf("%d", e);
@@ -167,11 +176,13 @@ void conversion(int num) {
   divisor = num;
   while (1) {
     push(stack, divisor % 16);
-    divisor >>= 4;  // 右移4位,除以16
+    divisor /= 16;  // 右移4位,除以16
     if (divisor == 0)
       break;
   }
   printf("十六进制:");
+  if (lt0)
+    printf("-");
   while (!isEmpty(stack)) {
     pop(stack, &e);
     if (e >= 0 && e <= 9) {
@@ -279,7 +290,7 @@ void hanoi(int n, char a, char b, char c) {
 }
 
 int main() {
-  hanoi(0, 'A', 'B', 'C');
-
+  //   hanoi(0, 'A', 'B', 'C');
+  conversion(-15);
   return 0;
 }

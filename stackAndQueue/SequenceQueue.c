@@ -20,7 +20,6 @@ void initQueue(SqQueue* queue) {
     return;
   queue->front = 0;
   queue->rear = 0;
-  queue->length = 0;
   queue->size = INITSIZE;
 }
 void destroyQueue(SqQueue* queue) {
@@ -31,7 +30,7 @@ int length(SqQueue* queue) {
   return (queue->rear - queue->front + INITSIZE) % INITSIZE;
 }
 int isEmpty(SqQueue* queue) {
-  return queue->length ? 0 : 1;
+  return length(queue) ? 0 : 1;
 }
 /**
  * 对头节点,front节点的地址
@@ -54,7 +53,6 @@ void enQueue(SqQueue* queue, ElemType e) {
   }
   queue->base[queue->rear] = e;
   queue->rear = (queue->rear + 1) % queue->size;
-  queue->length++;
 }
 /**
  * 出队,front节点
@@ -62,7 +60,6 @@ void enQueue(SqQueue* queue, ElemType e) {
 void deQueue(SqQueue* queue, ElemType* e) {
   *e = queue->base[queue->front];
   queue->front = (queue->front + 1) % queue->size;
-  queue->length--;
 }
 void traverse(SqQueue* queue) {
   int p = queue->front;
@@ -90,7 +87,7 @@ int main() {
   deQueue(queue, &e);
   deQueue(queue, &e);
   printf("%d\n", e);
-  printf("length=%d\n", queue->length);
+  printf("length=%d\n", length(queue));
   printf("size=%d\n", queue->size);
   traverse(queue);
   destroyQueue(queue);
